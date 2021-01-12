@@ -3,6 +3,7 @@
 	"displayName": "%displayName%",
 	"description": "%description%",
 	"publisher": "ms-vscode-remote",
+	"icon": "resources/remote-wsl.png",
 	"version": "0.0.2",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
