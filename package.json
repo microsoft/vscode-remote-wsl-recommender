@@ -3,13 +3,13 @@
 	"displayName": "%displayName%",
 	"description": "%description%",
 	"publisher": "ms-vscode-remote",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"license": "SEE LICENSE IN LICENSE.txt",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Microsoft/vscode-remote-release.git"
-		},
-		"bugs": {
+	},
+	"bugs": {
 		"url": "https://github.com/Microsoft/vscode-remote-release/issues"
 	},
 	"engines": {
