@@ -8,14 +8,19 @@ import TelemetryReporter from 'vscode-extension-telemetry';
 
 import * as vscode from 'vscode';
 import { getExperimentationService, TargetPopulation, IExperimentationTelemetry } from 'vscode-tas-client';
-import { REMOTE_WSL_RECOMMENDER_EXT_ID } from './extension';
+import { ExtensionId } from './extension';
+
+enum ConfigKeys {
+	enableTelementry = 'telemetry.enableTelemetry',
+	enableAllExperiments = 'remote.WSLRecommender.allExperiments',
+}
 
 export function enableTelemetry(): boolean {
-	return vscode.workspace.getConfiguration().get('telemetry.enableTelemetry') !== false;
+	return vscode.workspace.getConfiguration().get(ConfigKeys.enableTelementry) !== false;
 }
 
 export function enableExperiments(): boolean {
-	return vscode.workspace.getConfiguration().get('remote.WSLRecommender.allExperiments') === true;
+	return vscode.workspace.getConfiguration().get(ConfigKeys.enableAllExperiments) === true;
 }
 
 export enum Experiment {
@@ -28,11 +33,16 @@ export enum Recommendation {
 	installWSLRemote = 'installWSLRemote',
 }
 
-export function setupTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemetry {
+let telemetry: WSLRemoteTelemetry | undefined = undefined;
 
-	const wslExtension = vscode.extensions.getExtension(REMOTE_WSL_RECOMMENDER_EXT_ID);
+export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemetry {
+	if (telemetry) {
+		return telemetry;
+	}
+
+	const wslExtension = vscode.extensions.getExtension(ExtensionId.remoteWSLRecommender);
 	if (!wslExtension) {
-		throw new Error(`${REMOTE_WSL_RECOMMENDER_EXT_ID} not found in extensions.`);
+		throw new Error(`${ExtensionId.remoteWSLRecommender} not found in extensions.`);
 	}
 	const extensionPackage = wslExtension.packageJSON;
 
@@ -44,13 +54,19 @@ export function setupTelemetry(context: vscode.ExtensionContext): WSLRemoteTelem
 	const reporter = new ExperimentationTelemetry(baseReporter);
 	const target = getTargetPopulation();
 
+	const onDidChangeEmitter = new vscode.EventEmitter<void>();
+	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
+		if (e.affectsConfiguration(ConfigKeys.enableTelementry) || e.affectsConfiguration(ConfigKeys.enableAllExperiments)) {
+			onDidChangeEmitter.fire();
+		}
+	}));
 	/* __GDPR__
 		"query-expfeature" : {
 			"ABExp.queriedFeature": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
 		}
 	*/
 	const experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
-	return {
+	telemetry = {
 		reportRecommendation(kind: Recommendation, outcome: 'open' | 'hide' | 'show' | 'close'): void {
 			if (!enableTelemetry()) {
 				return;
@@ -73,19 +89,22 @@ export function setupTelemetry(context: vscode.ExtensionContext): WSLRemoteTelem
 					"kind" : { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
 				}
 			 */
-			const data: Record<string, string> = { };
+			const data: Record<string, string> = {};
 			reporter.sendTelemetryEvent('command', data);
 		},
 		isExperimentEnabled(experiment: Experiment): Promise<boolean> {
 			return enableExperiments() ? Promise.resolve(true) : experimentService.isCachedFlightEnabled(experiment);
-		}
+		},
+		onDidChange: onDidChangeEmitter.event
 	};
+	return telemetry;
 }
 
 export interface WSLRemoteTelemetry {
 	reportRecommendation(kind: Recommendation, outcome: 'open' | 'hide' | 'show' | 'close'): void;
-	reportCommand(kind: Experiment): void ;
+	reportCommand(kind: Experiment): void;
 	isExperimentEnabled(experiment: Experiment): Promise<boolean>;
+	readonly onDidChange: vscode.Event<void>;
 }
 class ExperimentationTelemetry implements IExperimentationTelemetry {
 

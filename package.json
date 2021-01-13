@@ -26,8 +26,8 @@
 	],
 	"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
 	"activationEvents": [
-		"onCommand:remote-wsl-recommender.openFolder",
-		"onCommand:remote-wsl-recommender.getStarted",
+		"onCommand:remote-wsl-recommender.openWSLFolder",
+		"onCommand:remote-wsl-recommender.gettingStarted",
 		"onStartupFinished"
 	],
 	"main": "./dist/extension.js",
@@ -35,36 +35,36 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "remote-wsl-recommender.openFolder",
-				"title": "Open Folder in WSL",
+				"command": "remote-wsl-recommender.openWSLFolder",
+				"title": "%openFolderCommand%",
 				"category": "Remote-WSL"
 			},
 			{
-				"command": "remote-wsl-recommender.getStarted",
-				"title": "Getting Started With WSL",
+				"command": "remote-wsl-recommender.gettingStarted",
+				"title": "%gettingStartedCommand%",
 				"category": "Remote-WSL"
 			}
 		],
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "remote-wsl-recommender.openFolder",
-					"when": "remote-wsl-recommender.open_folder"
+					"command": "remote-wsl-recommender.openWSLFolder",
+					"when": "remote-wsl-recommender.openWSLFolder.available"
 				},
 				{
-					"command": "remote-wsl-recommender.getStarted",
+					"command": "remote-wsl-recommender.gettingStarted",
 					"when": "false"
 				}
 			],
 			"statusBar/windowIndicator": [
 				{
-					"command": "remote-wsl-recommender.openFolder",
-					"when": "remote-wsl-recommender.open_folder",
+					"command": "remote-wsl-recommender.openWSLFolder",
+					"when": "remote-wsl-recommender.openWSLFolder.available",
 					"group": "0_local_wsl@2"
 				},
 				{
-					"command": "remote-wsl-recommender.getStarted",
-					"when": "remote-wsl-recommender.show_doc",
+					"command": "remote-wsl-recommender.gettingStarted",
+					"when": "remote-wsl-recommender.gettingStarted.available",
 					"group": "0_local_wsl@9"
 				}
 			]

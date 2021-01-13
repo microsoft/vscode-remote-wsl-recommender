@@ -43,4 +43,4 @@ function copy(fileNames, srcDir, targetDir) {
 const srcDir = path.resolve(__dirname, '..');
 const wslExtensionPath = getExtensionPath(process.argv[2]);
 
-copy(['dist', 'package.json', 'package.nls.json'], srcDir, wslExtensionPath);
+copy(['dist', 'resources', 'package.json', 'package.nls.json'], srcDir, wslExtensionPath);
