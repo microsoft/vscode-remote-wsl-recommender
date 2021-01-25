@@ -67,7 +67,7 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 	*/
 	const experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
 	telemetry = {
-		reportRecommendation(kind: Recommendation, outcome: 'open' | 'hide' | 'show' | 'close'): void {
+		reportRecommendation(kind: Recommendation, outcome: 'open' | 'close' | string): void {
 			if (!enableTelemetry()) {
 				return;
 			}
@@ -101,7 +101,7 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 }
 
 export interface WSLRemoteTelemetry {
-	reportRecommendation(kind: Recommendation, outcome: 'open' | 'hide' | 'show' | 'close'): void;
+	reportRecommendation(kind: Recommendation, outcome: 'open' | 'close' | string): void;
 	reportCommand(kind: Experiment): void;
 	isExperimentEnabled(experiment: Experiment): Promise<boolean>;
 	readonly onDidChange: vscode.Event<void>;

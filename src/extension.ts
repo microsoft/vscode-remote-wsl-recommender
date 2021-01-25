@@ -1,15 +1,15 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------------------------------------------*/
-
 import * as vscode from 'vscode';
 import * as os from 'os';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as cp from 'child_process';
 import { promisify } from 'util';
 
 import * as nls from 'vscode-nls';
-import { Experiment, Recommendation, getTelemetry, WSLRemoteTelemetry } from './telemetry';
+import { Experiment, Recommendation, getTelemetry } from './telemetry';
 
 const localize = nls.loadMessageBundle();
 
@@ -73,11 +73,16 @@ export async function activate(context: vscode.ExtensionContext) {
 			const isWSLInstalled = await checkIfWSLInstalled();
 			if (!isWSLInstalled) {
 				telemetry.reportRecommendation(Recommendation.installWSL, 'show');
-				const installWSL = localize('installWSLButton', 'Install WSL');
-				const response = await vscode.window.showErrorMessage(localize('installWSLDescription', 'The Windows Subsystem for Linux is not yet installed in Windows. Click the button to learn more.', installWSL));
-				if (response === installWSL) {
-					telemetry.reportRecommendation(Recommendation.installWSL, 'open');
+				const installWSL = 'Install Now';
+				const learnMore = 'Learn More';
+				const buttons = hasWSLInstall() ? [installWSL, learnMore] : [learnMore];
+				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux is not yet installed in Windows.'), ...buttons);
+				if (response === learnMore) {
+					telemetry.reportRecommendation(Recommendation.installWSL, 'learnMore');
 					await vscode.env.openExternal(vscode.Uri.parse('https://aka.ms/vscode-remote/wsl/install-wsl'));
+				} else if (response === installWSL) {
+					telemetry.reportRecommendation(Recommendation.installWSL, 'install');
+					startWSLInstall();
 				} else {
 					telemetry.reportRecommendation(Recommendation.installWSL, 'close');
 				}
@@ -112,6 +117,10 @@ async function checkIfWSLInstalled(): Promise<boolean> {
 	return !!(dllPath && await fileExists(dllPath));
 }
 
+function hasWSLInstall() {
+	return getWindowsBuildNumber() >= 20262;
+}
+
 function getLxssManagerDllPath(): string | undefined {
 	const is32ProcessOn64Windows = process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
 	const systemRoot = process.env['SystemRoot'];
@@ -119,6 +128,33 @@ function getLxssManagerDllPath(): string | undefined {
 		return path.join(systemRoot, is32ProcessOn64Windows ? 'Sysnative' : 'System32', 'lxss', 'LxssManager.dll');
 	}
 	return undefined;
+}
+
+function getWSLExEPath(): string | undefined {
+	const is32ProcessOn64Windows = process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
+	const systemRoot = process.env['SystemRoot'];
+	if (systemRoot) {
+		return path.join(systemRoot, is32ProcessOn64Windows ? 'Sysnative' : 'System32', 'wsl.exe');
+	}
+	return undefined;
+}
+
+function startWSLInstall() {
+	const installComand = `${getWSLExEPath()} --install`;
+
+	var command = [];
+	command.push('powershell.exe');
+	command.push('Start-Process');
+	command.push('-FilePath', 'cmd');
+	command.push('-ArgumentList', '/c "wsl.exe --install & pause"');
+	command.push('-Verb', 'RunAs');
+	var child = cp.exec(command.join(' '), { encoding: 'utf-8' }, (error, stdout, stderr) => {
+		if (error) {
+			console.log(error);
+		}
+		console.log(stdout);
+		console.error(stderr);
+	});
 }
 
 async function fileExists(location: string) {
