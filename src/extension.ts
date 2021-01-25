@@ -140,13 +140,11 @@ function getWSLExEPath(): string | undefined {
 }
 
 function startWSLInstall() {
-	const installComand = `${getWSLExEPath()} --install`;
-
 	var command = [];
 	command.push('powershell.exe');
 	command.push('Start-Process');
 	command.push('-FilePath', 'cmd');
-	command.push('-ArgumentList', '/c "wsl.exe --install & pause"');
+	command.push('-ArgumentList', `'/c "${getWSLExEPath()} --install & pause"'`);
 	command.push('-Verb', 'RunAs');
 	var child = cp.exec(command.join(' '), { encoding: 'utf-8' }, (error, stdout, stderr) => {
 		if (error) {
