@@ -28,9 +28,14 @@ export enum Experiment {
 	openWSLDocumentation = 'openWSLDocumentation'
 }
 
-export enum Recommendation {
-	installWSL = 'installWSL',
-	installWSLRemote = 'installWSLRemote',
+export enum Command {
+	openWSLFolder = 'openWSLFolder',
+	openWSLDocumentation = 'openWSLDocumentation'
+}
+
+export enum Dialog {
+	wslNotInstalled = 'wslNotInstalled',
+	wslRemoteNotInstalled = 'wslRemoteNotInstalled',
 }
 
 let telemetry: WSLRemoteTelemetry | undefined = undefined;
@@ -67,7 +72,7 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 	*/
 	const experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
 	telemetry = {
-		reportRecommendation(kind: Recommendation, outcome: 'open' | 'close' | string): void {
+		reportDialog(kind: Dialog, outcome: 'open' | 'close' | string): void {
 			if (!enableTelemetry()) {
 				return;
 			}
@@ -80,7 +85,7 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 			const data: Record<string, string> = { kind, outcome };
 			reporter.sendTelemetryEvent('recommendation', data);
 		},
-		reportCommand(experiment: Experiment): void {
+		reportCommand(kind: Command): void {
 			if (!enableTelemetry()) {
 				return;
 			}
@@ -89,7 +94,7 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 					"kind" : { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
 				}
 			 */
-			const data: Record<string, string> = {};
+			const data: Record<string, string> = { kind };
 			reporter.sendTelemetryEvent('command', data);
 		},
 		isExperimentEnabled(experiment: Experiment): Promise<boolean> {
@@ -101,8 +106,8 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 }
 
 export interface WSLRemoteTelemetry {
-	reportRecommendation(kind: Recommendation, outcome: 'open' | 'close' | string): void;
-	reportCommand(kind: Experiment): void;
+	reportDialog(kind: Dialog, outcome: 'open' | 'close' | string): void;
+	reportCommand(kind: Command): void;
 	isExperimentEnabled(experiment: Experiment): Promise<boolean>;
 	readonly onDidChange: vscode.Event<void>;
 }

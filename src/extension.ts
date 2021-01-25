@@ -9,7 +9,7 @@ import * as cp from 'child_process';
 import { promisify } from 'util';
 
 import * as nls from 'vscode-nls';
-import { Experiment, Recommendation, getTelemetry } from './telemetry';
+import { Experiment, Command, getTelemetry, Dialog } from './telemetry';
 
 const localize = nls.loadMessageBundle();
 
@@ -69,32 +69,32 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	addFeature(Experiment.openWSLFolder, ContextKey.openWSLFolder, () => {
 		return vscode.commands.registerCommand(CommandId.openWSLFolder, async () => {
-			telemetry.reportCommand(Experiment.openWSLFolder);
+			telemetry.reportCommand(Command.openWSLFolder);
 			const isWSLInstalled = await checkIfWSLInstalled();
 			if (!isWSLInstalled) {
-				telemetry.reportRecommendation(Recommendation.installWSL, 'show');
+				telemetry.reportDialog(Dialog.wslNotInstalled, 'show');
 				const installWSL = 'Install Now';
 				const learnMore = 'Learn More';
 				const buttons = hasWSLInstall() ? [installWSL, learnMore] : [learnMore];
 				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux is not yet installed in Windows.'), ...buttons);
 				if (response === learnMore) {
-					telemetry.reportRecommendation(Recommendation.installWSL, 'learnMore');
+					telemetry.reportDialog(Dialog.wslNotInstalled, 'open');
 					await vscode.env.openExternal(vscode.Uri.parse('https://aka.ms/vscode-remote/wsl/install-wsl'));
 				} else if (response === installWSL) {
-					telemetry.reportRecommendation(Recommendation.installWSL, 'install');
+					telemetry.reportDialog(Dialog.wslNotInstalled, 'install');
 					startWSLInstall();
 				} else {
-					telemetry.reportRecommendation(Recommendation.installWSL, 'close');
+					telemetry.reportDialog(Dialog.wslNotInstalled, 'close');
 				}
 			} else {
-				telemetry.reportRecommendation(Recommendation.installWSLRemote, 'show');
+				telemetry.reportDialog(Dialog.wslRemoteNotInstalled, 'show');
 				const showExtension = localize('showExtensionButton', 'Show Extension');
 				const res = await vscode.window.showInformationMessage(localize('installRemoteWSLDescription', 'The \'Remote - WSL\' extension is required to complete the action. The extension allows to open a window where commands, extensions and the terminal run in the Linux subsystem.'), showExtension);
 				if (res === showExtension) {
-					telemetry.reportRecommendation(Recommendation.installWSLRemote, 'open');
+					telemetry.reportDialog(Dialog.wslRemoteNotInstalled, 'open');
 					await vscode.commands.executeCommand('workbench.extensions.action.showExtensionsWithIds', [ExtensionId.remoteWSL]);
 				} else {
-					telemetry.reportRecommendation(Recommendation.installWSLRemote, 'close');
+					telemetry.reportDialog(Dialog.wslRemoteNotInstalled, 'close');
 				}
 			}
 			// Start-Process wsl.exe -- -Verb runAs
@@ -103,7 +103,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	addFeature(Experiment.openWSLDocumentation, ContextKey.gettingStarted, () => {
 		return vscode.commands.registerCommand(CommandId.gettingStarted, async () => {
-			telemetry.reportCommand(Experiment.openWSLDocumentation);
+			telemetry.reportCommand(Command.openWSLDocumentation);
 			return vscode.env.openExternal(vscode.Uri.parse(WSL_DOC_URL));
 		});
 	});
@@ -130,7 +130,7 @@ function getLxssManagerDllPath(): string | undefined {
 	return undefined;
 }
 
-function getWSLExEPath(): string | undefined {
+function getWSLExecutablePath(): string | undefined {
 	const is32ProcessOn64Windows = process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
 	const systemRoot = process.env['SystemRoot'];
 	if (systemRoot) {
@@ -140,13 +140,13 @@ function getWSLExEPath(): string | undefined {
 }
 
 function startWSLInstall() {
-	var command = [];
+	const command = [];
 	command.push('powershell.exe');
 	command.push('Start-Process');
 	command.push('-FilePath', 'cmd');
-	command.push('-ArgumentList', `'/c "${getWSLExEPath()} --install & pause"'`);
+	command.push('-ArgumentList', `'/c "${getWSLExecutablePath()} --install & pause"'`);
 	command.push('-Verb', 'RunAs');
-	var child = cp.exec(command.join(' '), { encoding: 'utf-8' }, (error, stdout, stderr) => {
+	cp.exec(command.join(' '), { encoding: 'utf-8' }, (error, stdout, stderr) => {
 		if (error) {
 			console.log(error);
 		}
