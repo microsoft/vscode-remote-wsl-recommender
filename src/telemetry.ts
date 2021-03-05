@@ -7,11 +7,12 @@ import * as path from 'path';
 import TelemetryReporter from 'vscode-extension-telemetry';
 
 import * as vscode from 'vscode';
-import { getExperimentationService, TargetPopulation, IExperimentationTelemetry } from 'vscode-tas-client';
+import { getExperimentationService, TargetPopulation, IExperimentationTelemetry, IExperimentationService } from 'vscode-tas-client';
 import { ExtensionId } from './extension';
 
 enum ConfigKeys {
 	enableTelementry = 'telemetry.enableTelemetry',
+	enableExperiments = 'workbench.enableExperiments',
 	enableAllExperiments = 'remote.WSLRecommender.allExperiments',
 }
 
@@ -20,6 +21,10 @@ export function enableTelemetry(): boolean {
 }
 
 export function enableExperiments(): boolean {
+	return vscode.workspace.getConfiguration().get(ConfigKeys.enableExperiments) !== false;
+}
+
+export function enableAllExperimentalFeatures(): boolean {
 	return vscode.workspace.getConfiguration().get(ConfigKeys.enableAllExperiments) === true;
 }
 
@@ -61,16 +66,12 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 
 	const onDidChangeEmitter = new vscode.EventEmitter<void>();
 	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
-		if (e.affectsConfiguration(ConfigKeys.enableTelementry) || e.affectsConfiguration(ConfigKeys.enableAllExperiments)) {
+		if (e.affectsConfiguration(ConfigKeys.enableTelementry) || e.affectsConfiguration(ConfigKeys.enableExperiments)
+			|| e.affectsConfiguration(ConfigKeys.enableAllExperiments)) {
 			onDidChangeEmitter.fire();
 		}
 	}));
-	/* __GDPR__
-		"query-expfeature" : {
-			"ABExp.queriedFeature": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
-		}
-	*/
-	const experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
+	let experimentService: IExperimentationService | undefined;
 	telemetry = {
 		reportDialog(kind: Dialog, outcome: 'open' | 'close' | string): void {
 			if (!enableTelemetry()) {
@@ -97,8 +98,22 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 			const data: Record<string, string> = { kind };
 			reporter.sendTelemetryEvent('command', data);
 		},
-		isExperimentEnabled(experiment: Experiment): Promise<boolean> {
-			return enableExperiments() ? Promise.resolve(true) : experimentService.isCachedFlightEnabled(experiment);
+		async isExperimentEnabled(experiment: Experiment): Promise<boolean> {
+			if (enableAllExperimentalFeatures()) {
+				return true;
+			}
+			if (!enableExperiments()) {
+				return false;
+			}
+			if (!experimentService) {
+				/* __GDPR__
+					"query-expfeature" : {
+						"ABExp.queriedFeature": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
+					}
+				*/
+				experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
+			}
+			return experimentService.isCachedFlightEnabled(experiment);
 		},
 		onDidChange: onDidChangeEmitter.event
 	};
