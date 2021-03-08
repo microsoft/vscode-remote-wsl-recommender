@@ -3988,7 +3988,7 @@ vscode-nls@^5.0.0:
   resolved "https://registry.yarnpkg.com/vscode-nls/-/vscode-nls-5.0.0.tgz#99f0da0bd9ea7cda44e565a74c54b1f2bc257840"
   integrity sha512-u0Lw+IYlgbEJFF6/qAqG2d1jQmJl0eyAGJHoAJqr2HT4M2BNuQYSEiSE75f52pXHSJm8AlTjnLLbBFPrdz2hpA==
 
-vscode-tas-client@^0.1.4:
+vscode-tas-client@^0.1.17:
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/vscode-tas-client/-/vscode-tas-client-0.1.17.tgz#3a8613776149f4c571b6eb4a61def307a32997d9"
   integrity sha512-5uqMeg7sjsu1/QkmuRtBOXtZnnrCXAMEihbOSxan3bk2NdA/nZvhfhfLh8gd9FlBBL56QH69I8Zn25B2yGPRng==
