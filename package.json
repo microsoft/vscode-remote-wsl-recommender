@@ -75,6 +75,8 @@
 		"compile": "webpack --mode none && yarn lint",
 		"watch": "webpack --mode none --watch",
 		"lint": "eslint src --ext ts",
+		"preversion": "yarn compile",
+    	"postversion": "git push && git push --tags",
 		"pretest": "yarn run compile",
 		"test": "node ./out/test/runTest.js",
 		"patch-insiders": "yarn compile && node ./build/patch-local.js .vscode-insiders",
