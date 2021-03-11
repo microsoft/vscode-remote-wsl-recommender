@@ -65,13 +65,30 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 	const target = getTargetPopulation();
 
 	const onDidChangeEmitter = new vscode.EventEmitter<void>();
+
+	let experimentService: IExperimentationService | undefined;
+	const initExperimentationService = () => {
+		if (enableExperiments() && !enableAllExperimentalFeatures()) {
+			/* __GDPR__
+				"query-expfeature" : {
+					"ABExp.queriedFeature": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
+				}
+			*/
+			experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
+		} else {
+			experimentService = undefined;
+		}
+	};
+	initExperimentationService();
+
 	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
 		if (e.affectsConfiguration(ConfigKeys.enableTelementry) || e.affectsConfiguration(ConfigKeys.enableExperiments)
 			|| e.affectsConfiguration(ConfigKeys.enableAllExperiments)) {
-			onDidChangeEmitter.fire();
+				initExperimentationService();
+				onDidChangeEmitter.fire();
 		}
 	}));
-	let experimentService: IExperimentationService | undefined;
+
 	telemetry = {
 		reportDialog(kind: Dialog, outcome: 'open' | 'close' | string): void {
 			if (!enableTelemetry()) {
@@ -102,18 +119,8 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 			if (enableAllExperimentalFeatures()) {
 				return true;
 			}
-			if (!enableExperiments()) {
-				return false;
-			}
-			if (!experimentService) {
-				/* __GDPR__
-					"query-expfeature" : {
-						"ABExp.queriedFeature": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
-					}
-				*/
-				experimentService = getExperimentationService(`${publisher}.${name}`, version, target, reporter, context.globalState);
-			}
-			return experimentService.isCachedFlightEnabled(experiment);
+
+			return experimentService !== undefined && experimentService.isCachedFlightEnabled(experiment);
 		},
 		onDidChange: onDidChangeEmitter.event
 	};
