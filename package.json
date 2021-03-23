@@ -5,10 +5,10 @@
 	"publisher": "ms-vscode-remote",
 	"icon": "resources/remote-wsl.png",
 	"version": "0.0.6",
-	"license": "SEE LICENSE IN LICENSE.txt",
+	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-remote-release.git"
+		"url": "https://github.com/Microsoft/vscode-remote-wsl-recommender.git"
 	},
 	"bugs": {
 		"url": "https://github.com/Microsoft/vscode-remote-release/issues"
