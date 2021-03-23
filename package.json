@@ -4,7 +4,7 @@
 	"description": "%description%",
 	"publisher": "ms-vscode-remote",
 	"icon": "resources/remote-wsl.png",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -76,7 +76,7 @@
 		"watch": "webpack --mode none --watch",
 		"lint": "eslint src --ext ts",
 		"preversion": "yarn compile",
-    	"postversion": "git push && git push --tags",
+		"postversion": "git push && git push --tags",
 		"pretest": "yarn run compile",
 		"test": "node ./out/test/runTest.js",
 		"patch-insiders": "yarn compile && node ./build/patch-local.js .vscode-insiders",
