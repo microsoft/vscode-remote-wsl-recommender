@@ -32,6 +32,7 @@
 	],
 	"main": "./dist/extension.js",
 	"enableProposedApi": true,
+	"workspaceTrust": { "request": "never" },
 	"contributes": {
 		"commands": [
 			{
