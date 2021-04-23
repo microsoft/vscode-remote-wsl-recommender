@@ -62,16 +62,16 @@
 					"when": "false"
 				}
 			],
-			"statusBar/windowIndicator": [
+			"statusBar/remoteIndicator": [
 				{
 					"command": "remote-wsl-recommender.openWSLFolder",
 					"when": "remote-wsl-recommender.openWSLFolder.available",
-					"group": "0_local_wsl@2"
+					"group": "remote_10_wsl_0_local@2"
 				},
 				{
 					"command": "remote-wsl-recommender.gettingStarted",
 					"when": "remote-wsl-recommender.gettingStarted.available",
-					"group": "0_local_wsl@9"
+					"group": "remote_10_wsl_0_local@9"
 				}
 			]
 		}
