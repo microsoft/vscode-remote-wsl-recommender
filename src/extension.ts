@@ -76,7 +76,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				const installWSL = 'Install Now';
 				const learnMore = 'Learn More';
 				const buttons = hasWSLInstall() ? [installWSL, learnMore] : [learnMore];
-				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux is not yet installed in Windows.'), ...buttons);
+				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux is not yet installed in Windows and is required to complete the action.\n\nIt lets developers run a GNU/Linux environment directly on Windows without the overhead of a traditional virtual machine and VS Code - through the Remote-WSL extension - can open folders in WSL and will run commands, extensions and the terminal in the Linux subsystem.'), ...buttons);
 				if (response === learnMore) {
 					telemetry.reportDialog(Dialog.wslNotInstalled, 'open');
 					await vscode.env.openExternal(vscode.Uri.parse('https://aka.ms/vscode-remote/wsl/install-wsl'));
