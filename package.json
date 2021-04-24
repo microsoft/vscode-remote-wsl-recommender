@@ -31,7 +31,6 @@
 		"onStartupFinished"
 	],
 	"main": "./dist/extension.js",
-	"enableProposedApi": true,
 	"capabilities": {
 		"virtualWorkspaces": true,
 		"untrustedWorkspaces": {
