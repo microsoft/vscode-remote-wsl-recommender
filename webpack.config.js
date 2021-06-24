@@ -55,6 +55,8 @@ module.exports = {
 	},
 	externals: {
 		'vscode': 'commonjs vscode',
+		'applicationinsights-native-metrics': 'commonjs applicationinsights-native-metrics', // ignored because we don't ship native module
+		'@opentelemetry/tracing': 'commonjs @opentelemetry/tracing' // ignored because we don't ship this module
 	},
 	output: {
 		filename: '[name].js',
