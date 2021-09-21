@@ -71,7 +71,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		return vscode.commands.registerCommand(CommandId.openWSLFolder, async () => {
 			telemetry.reportCommand(Command.openWSLFolder);
 			const isWSLInstalled = await checkIfWSLInstalled();
-			if (!isWSLInstalled) {
+			if (isWSLInstalled !== true) {
 				telemetry.reportDialog(Dialog.wslNotInstalled, 'show');
 				const installWSL = 'Install Now';
 				const learnMore = 'Learn More';
@@ -112,11 +112,38 @@ export async function activate(context: vscode.ExtensionContext) {
 // this method is called when your extension is deactivated
 export function deactivate() { }
 
-async function checkIfWSLInstalled(): Promise<boolean> {
-	const dllPath = getLxssManagerDllPath();
-	return !!(dllPath && await fileExists(dllPath));
+export async function checkIfWSLInstalled(): Promise<true | string> {
+	if (getWindowsBuildNumber() >= 22000) {
+		const wslExePath = getWSLExecutablePath();
+		if (wslExePath) {
+			if (!await fileExists(wslExePath)) {
+				return `'${wslExePath}' not found`;
+			}
+			return new Promise<true | string>(s => {
+				cp.execFile(wslExePath, ['--status'], (err) => {
+					if (err) {
+						s('--status exits with error');
+					} else {
+						s(true);
+					}
+				});
+			});
+		} else {
+			return `Environment variable 'SystemRoot' not defined`;
+		}
+	} else {
+		const dllPath = getLxssManagerDllPath();
+		if (dllPath) {
+			if (await fileExists(dllPath)) {
+				return true;
+			} else {
+				return `'${dllPath}' not found`;
+			}
+		} else {
+			return `Environment variable 'SystemRoot' not defined`;
+		}
+	}
 }
-
 function hasWSLInstall() {
 	return getWindowsBuildNumber() >= 20262;
 }
