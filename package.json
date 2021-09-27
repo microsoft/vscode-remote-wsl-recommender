@@ -88,7 +88,7 @@
 		"patch-dev": "yarn compile && node ./build/patch-local.js .vscode-oss-dev"
 	},
 	"dependencies": {
-		"vscode-extension-telemetry": "0.3.2",
+		"vscode-extension-telemetry": "0.4.1",
 		"vscode-nls": "^5.0.0",
 		"vscode-tas-client": "^0.1.22"
 	},
