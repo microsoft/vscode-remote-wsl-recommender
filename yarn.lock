@@ -185,6 +185,11 @@
     "@typescript-eslint/types" "5.10.2"
     eslint-visitor-keys "^3.0.0"
 
+"@vscode/extension-telemetry@0.4.8":
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/@vscode/extension-telemetry/-/extension-telemetry-0.4.8.tgz#bb67386ae7ba4d3505978243df91055d5e0cf950"
+  integrity sha512-5xtf8k7vQJ+EOqhAcEaGwbnj9t/qLjIJQePmq7eBKEZzt8vpnOg0ZJIJx6VnQFAwO3lfsf3M+X3NT+IpKRymZw==
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -1841,11 +1846,6 @@ vinyl@^2.2.1:
     cloneable-readable "^1.0.0"
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
-
-vscode-extension-telemetry@0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/vscode-extension-telemetry/-/vscode-extension-telemetry-0.4.5.tgz#1957d5a8b0cd6ad9a79d4f260fe037fbf98732bb"
-  integrity sha512-YhPiPcelqM5xyYWmD46jIcsxLYWkPZhAxlBkzqmpa218fMtTT17ERdOZVCXcs1S5AjvDHlq43yCgi8TaVQjjEg==
 
 vscode-nls-dev@4.0.0-next.1:
   version "4.0.0-next.1"

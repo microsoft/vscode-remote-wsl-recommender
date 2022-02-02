@@ -4,7 +4,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 
 import * as vscode from 'vscode';
 import { getExperimentationService, TargetPopulation, IExperimentationTelemetry, IExperimentationService } from 'vscode-tas-client';
