@@ -4,7 +4,7 @@
 	"description": "%description%",
 	"publisher": "ms-vscode-remote",
 	"icon": "resources/remote-wsl.png",
-	"version": "0.0.15",
+	"version": "0.0.16",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
