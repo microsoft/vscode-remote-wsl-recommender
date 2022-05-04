@@ -88,7 +88,7 @@
 	"devDependencies": {
 		"@vscode/extension-telemetry": "0.4.9",
 		"vscode-nls": "^5.0.0",
-		"vscode-tas-client": "^0.1.31",
+		"vscode-tas-client": "^0.1.42",
 		"@types/copy-webpack-plugin": "^10.1.0",
 		"@types/node": "14.x",
 		"@types/vscode": "^1.52.0",
