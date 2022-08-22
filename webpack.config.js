@@ -11,6 +11,7 @@ const fs = require('fs');
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { NLSBundlePlugin } = require('vscode-nls-dev/lib/webpack-bundler');
+const { optimize } = require('webpack');
 
 const pkgPath = path.join(__dirname, 'package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
@@ -66,6 +67,9 @@ module.exports = {
 	},
 	devtool: 'source-map',
 	plugins: [
+		new optimize.LimitChunkCountPlugin({
+			maxChunks: 1
+		}),
 		new CopyWebpackPlugin({
 			patterns: [
 				{ from: 'src', to: '.', globOptions: { ignore: ['**/test/**', '**/*.ts'] }, noErrorOnMissing: true }
