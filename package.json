@@ -42,12 +42,12 @@
 			{
 				"command": "remote-wsl-recommender.openWSLFolder",
 				"title": "%openFolderCommand%",
-				"category": "Remote-WSL"
+				"category": "WSL"
 			},
 			{
 				"command": "remote-wsl-recommender.gettingStarted",
 				"title": "%gettingStartedCommand%",
-				"category": "Remote-WSL"
+				"category": "WSL"
 			}
 		],
 		"menus": {
