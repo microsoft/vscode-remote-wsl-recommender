@@ -76,7 +76,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				const installWSL = 'Install Now';
 				const learnMore = 'Learn More';
 				const buttons = hasWSLInstall() ? [installWSL, learnMore] : [learnMore];
-				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux (WSL) must be installed to complete the action. WSL lets you run a GNU/Linux environment directly on Windows without the overhead of a traditional virtual machine. VS Code, through the Remote-WSL extension, can then open folders and run commands, extensions, and the terminal in WSL.'), ...buttons);
+				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux (WSL) must be installed to complete the action. WSL lets you run a GNU/Linux environment directly on Windows without the overhead of a traditional virtual machine. VS Code, through the WSL extension, can then open folders and run commands, extensions, and the terminal in WSL.'), ...buttons);
 				if (response === learnMore) {
 					telemetry.reportDialog(Dialog.wslNotInstalled, 'open');
 					await vscode.env.openExternal(vscode.Uri.parse('https://aka.ms/vscode-remote/wsl/install-wsl'));
@@ -89,7 +89,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			} else {
 				telemetry.reportDialog(Dialog.wslRemoteNotInstalled, 'show');
 				const showExtension = localize('showExtensionButton', 'Show Extension');
-				const res = await vscode.window.showInformationMessage(localize('installRemoteWSLDescription', 'The \'Remote - WSL\' extension is required to complete the action. The extension allows to open a window where commands, extensions and the terminal run in the Linux subsystem.'), showExtension);
+				const res = await vscode.window.showInformationMessage(localize('installRemoteWSLDescription', 'The \'WSL\' extension is required to complete the action. The extension allows to open a window where commands, extensions and the terminal run in the Linux subsystem.'), showExtension);
 				if (res === showExtension) {
 					telemetry.reportDialog(Dialog.wslRemoteNotInstalled, 'open');
 					await vscode.commands.executeCommand('workbench.extensions.action.showExtensionsWithIds', [ExtensionId.remoteWSL]);
