@@ -75,14 +75,15 @@ export async function activate(context: vscode.ExtensionContext) {
 				telemetry.reportDialog(Dialog.wslNotInstalled, 'show');
 				const installWSL = 'Install Now';
 				const learnMore = 'Learn More';
-				const buttons = hasWSLInstall() ? [installWSL, learnMore] : [learnMore];
+				const powershellLocation = getPowershellLocation();
+				const buttons = (hasWSLInstall() && powershellLocation) ? [installWSL, learnMore] : [learnMore];
 				const response = await vscode.window.showErrorMessage(localize('installWSL', 'The Windows Subsystem for Linux (WSL) must be installed to complete the action. WSL lets you run a GNU/Linux environment directly on Windows without the overhead of a traditional virtual machine. VS Code, through the WSL extension, can then open folders and run commands, extensions, and the terminal in WSL.'), ...buttons);
 				if (response === learnMore) {
 					telemetry.reportDialog(Dialog.wslNotInstalled, 'open');
 					await vscode.env.openExternal(vscode.Uri.parse('https://aka.ms/vscode-remote/wsl/install-wsl'));
 				} else if (response === installWSL) {
 					telemetry.reportDialog(Dialog.wslNotInstalled, 'install');
-					startWSLInstall();
+					startWSLInstall(powershellLocation!);
 				} else {
 					telemetry.reportDialog(Dialog.wslNotInstalled, 'close');
 				}
@@ -166,9 +167,18 @@ function getWSLExecutablePath(): string | undefined {
 	return undefined;
 }
 
-function startWSLInstall() {
+function getPowershellLocation() : string | undefined {
+	const is32ProcessOn64Windows = process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
+	const systemRoot = process.env['SystemRoot'];
+	if (systemRoot) {
+		return path.join(systemRoot, is32ProcessOn64Windows ? 'Sysnative' : 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe');
+	}
+	return undefined;
+}
+
+function startWSLInstall(powershellLocation: string) {
 	const command = [];
-	command.push('powershell.exe');
+	command.push(powershellLocation);
 	command.push('Start-Process');
 	command.push('-FilePath', 'cmd');
 	command.push('-ArgumentList', `'/c "${getWSLExecutablePath()} --install & pause"'`);
