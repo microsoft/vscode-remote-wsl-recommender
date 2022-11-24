@@ -4,7 +4,7 @@
 	"description": "%description%",
 	"publisher": "ms-vscode-remote",
 	"icon": "resources/remote-wsl.png",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -91,15 +91,15 @@
 		"vscode-tas-client": "^0.1.63",
 		"@types/copy-webpack-plugin": "^10.1.0",
 		"@types/node": "16.x",
-		"@types/vscode": "^1.52.0",
-		"@typescript-eslint/eslint-plugin": "^5.38.1",
-		"@typescript-eslint/parser": "^5.38.1",
+		"@types/vscode": "^1.73.1",
+		"@typescript-eslint/eslint-plugin": "^5.44.0",
+		"@typescript-eslint/parser": "^5.44.0",
 		"copy-webpack-plugin": "^11.0.0",
-		"eslint": "^8.24.0",
+		"eslint": "^8.28.0",
 		"ts-loader": "^9.4.1",
-		"typescript": "^4.8.4",
-		"vscode-nls-dev": "^4.0.1",
-		"webpack": "^5.74.0",
-		"webpack-cli": "^4.10.0"
+		"typescript": "^4.9.3",
+		"vscode-nls-dev": "^4.0.3",
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.0"
 	}
 }
