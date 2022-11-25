@@ -14,7 +14,7 @@
 		"url": "https://github.com/Microsoft/vscode-remote-release/issues"
 	},
 	"engines": {
-		"vscode": "^1.52.0"
+		"vscode": "^1.73.0"
 	},
 	"categories": [
 		"Other"
@@ -91,7 +91,7 @@
 		"vscode-tas-client": "^0.1.63",
 		"@types/copy-webpack-plugin": "^10.1.0",
 		"@types/node": "16.x",
-		"@types/vscode": "^1.73.1",
+		"@types/vscode": "^1.73.0",
 		"@typescript-eslint/eslint-plugin": "^5.44.0",
 		"@typescript-eslint/parser": "^5.44.0",
 		"copy-webpack-plugin": "^11.0.0",
