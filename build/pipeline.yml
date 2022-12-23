@@ -16,6 +16,12 @@ resources:
       ref: main
       endpoint: Monaco
 
+parameters:
+  - name: publishExtension
+    displayName: � Publish Extension
+    type: boolean
+    default: false
+
 extends:
   template: azure-pipelines/extension/stable.yml@templates
   parameters:
@@ -25,3 +31,4 @@ extends:
 
       - script: yarn lint
         displayName: Static analysis
+    publishExtension: ${{ parameters.publishExtension }} 
