@@ -29,12 +29,12 @@ export function enableAllExperimentalFeatures(): boolean {
 }
 
 export enum Experiment {
-	openWSLFolder = 'openWSLFolder',
+	connectToWSL = 'connectToWSL',
 	openWSLDocumentation = 'openWSLDocumentation'
 }
 
 export enum Command {
-	openWSLFolder = 'openWSLFolder',
+	connectToWSL = 'connectToWSL',
 	openWSLDocumentation = 'openWSLDocumentation'
 }
 

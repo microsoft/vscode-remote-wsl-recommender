@@ -38,8 +38,8 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "remote-wsl-recommender.openWSLFolder",
-				"title": "%openFolderCommand%",
+				"command": "remote-wsl-recommender.connectToWSL",
+				"title": "%connectToWSLCommand%",
 				"category": "WSL"
 			},
 			{
@@ -51,8 +51,8 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "remote-wsl-recommender.openWSLFolder",
-					"when": "remote-wsl-recommender.openWSLFolder.available"
+					"command": "remote-wsl-recommender.connectToWSL",
+					"when": "remote-wsl-recommender.connectToWSL.available"
 				},
 				{
 					"command": "remote-wsl-recommender.gettingStarted",
@@ -61,8 +61,8 @@
 			],
 			"statusBar/remoteIndicator": [
 				{
-					"command": "remote-wsl-recommender.openWSLFolder",
-					"when": "remote-wsl-recommender.openWSLFolder.available",
+					"command": "remote-wsl-recommender.connectToWSL",
+					"when": "remote-wsl-recommender.connectToWSL.available",
 					"group": "remote_10_wsl_0_local@2"
 				},
 				{
