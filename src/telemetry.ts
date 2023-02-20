@@ -29,12 +29,12 @@ export function enableAllExperimentalFeatures(): boolean {
 }
 
 export enum Experiment {
-	openWSLFolder = 'openWSLFolder',
+	connectToWSL = 'connectToWSL',
 	openWSLDocumentation = 'openWSLDocumentation'
 }
 
 export enum Command {
-	openWSLFolder = 'openWSLFolder',
+	connectToWSL = 'connectToWSL',
 	openWSLDocumentation = 'openWSLDocumentation'
 }
 
@@ -58,7 +58,7 @@ export function getTelemetry(context: vscode.ExtensionContext): WSLRemoteTelemet
 
 	const { name, publisher, version, aiKey } = extensionPackage;
 
-	const baseReporter = new TelemetryReporter(`${publisher}.${name}`, version, aiKey);
+	const baseReporter = new TelemetryReporter(aiKey);
 	context.subscriptions.push(baseReporter);
 
 	const reporter = new ExperimentationTelemetry(baseReporter);

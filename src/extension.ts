@@ -19,12 +19,12 @@ export enum ExtensionId {
 }
 
 enum ContextKey {
-	openWSLFolder = 'remote-wsl-recommender.openWSLFolder.available',
+	connectToWSL = 'remote-wsl-recommender.connectToWSL.available',
 	gettingStarted = 'remote-wsl-recommender.gettingStarted.available'
 }
 
 enum CommandId {
-	openWSLFolder = 'remote-wsl-recommender.openWSLFolder',
+	connectToWSL = 'remote-wsl-recommender.connectToWSL',
 	gettingStarted = 'remote-wsl-recommender.gettingStarted'
 }
 
@@ -67,9 +67,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push({ dispose: () => featureDisposable?.dispose() });
 	}
 
-	addFeature(Experiment.openWSLFolder, ContextKey.openWSLFolder, () => {
-		return vscode.commands.registerCommand(CommandId.openWSLFolder, async () => {
-			telemetry.reportCommand(Command.openWSLFolder);
+	addFeature(Experiment.connectToWSL, ContextKey.connectToWSL, () => {
+		return vscode.commands.registerCommand(CommandId.connectToWSL, async () => {
+			telemetry.reportCommand(Command.connectToWSL);
 			const isWSLInstalled = await checkIfWSLInstalled();
 			if (isWSLInstalled !== true) {
 				telemetry.reportDialog(Dialog.wslNotInstalled, 'show');
