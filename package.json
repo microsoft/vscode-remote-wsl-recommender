@@ -83,6 +83,9 @@
 		"patch-insiders": "npm run compile && node ./build/patch-local.js .vscode-insiders",
 		"patch-dev": "npm run compile && node ./build/patch-local.js .vscode-oss-dev"
 	},
+	"overrides": {
+		"serialize-javascript": "^7.0.4"
+	},
 	"devDependencies": {
 		"@vscode/extension-telemetry": "0.9.7",
 		"vscode-nls": "^5.2.0",
